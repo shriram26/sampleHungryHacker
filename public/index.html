@@ -1,0 +1,89 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="foodApp">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Hungry Hacker</title>
+	<!-- google font -->
+	<link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#food-list 				{ margin-bottom:30px; }
+		#food-form 	 			{ margin-bottom:50px; }
+		.googleFont	{font-family: 'Titillium Web', sans-serif;}
+	</style>
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+
+	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
+	<script src="js/services/foods.js"></script> <!-- load our food service -->
+	<script src="js/core.js"></script> <!-- load our main application -->
+
+</head>
+<!-- SET THE CONTROLLER -->
+<body ng-controller="mainController" class="googleFont">
+	<div class="container">
+
+		<!-- HEADER AND FOOD COUNT -->
+		<div class="jumbotron text-center">
+			<h3>Hungry Hacker Food Menu</h3>
+		</div>
+		
+		<!-- FORM TO CREATE FOOD -->
+		<div id="food-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
+						<h4>Food Name</h4>
+						<input type="text" class="form-control  text-center" placeholder="Enter food name here" ng-model="formData.foodName" required min="3" maxlength="20">
+						<h4>Price</h4>
+						<input class="form-control  text-center" type='number' min="0" step='0.01' value='0.00' placeholder='0.00' ng-model="formData.price" required maxlength="10">
+					</div>
+
+					<!-- createFood() WILL CREATE NEW FOOD -->
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createFood()">Add</button>
+				</form>
+			</div>
+		</div>
+		
+		<!-- FOOD LIST -->
+		<div id="food-list" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<!-- LOOP OVER THE FOODS IN $scope.foods -->
+				<div style="text-align: right;padding:8px">
+					<div class="googleFont" style="text-align: right;padding:8px">Search Food : <input type="text" data-ng-model="foodSearch" /></div>
+					<div class="googleFont" style="text-align: right;padding:8px">No. of items in menu list - <span class="label label-info">{{ foods.length }}</span></div>
+				</div>
+				<table class="table">
+					<thead>
+					      <tr >
+					        <th class="text-center">Food Name</th>
+					        <th class="text-center">Price</th>
+					        <th class="text-center">Delete?</th>
+					      </tr>
+					</thead>
+					<tr ng-repeat="food in foods | filter : foodSearch |  orderBy : 'foodName' : true" >
+						<td>{{ food.foodName }}</td>
+						<td>{{ food.price | currency}}</td>
+						<td><img src="images/delete.png" style="width:16px;height:16px;cursor:pointer" ng-click="deleteFood(food._id)"/>
+					</tr>
+				</table>
+				<p class="text-center" ng-show="loading">
+					<span class="fa fa-spinner fa-spin fa-3x"></span>
+				</p>
+				<div class="text-center" style="padding:20px"><h4>Total Food Price - {{totalPrice | currency}} (inclusive of 7.5% tax)</h4></div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
